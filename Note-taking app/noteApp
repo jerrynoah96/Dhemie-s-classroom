@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+  <title>Document</title>
+</head>
+<body>
+  <style>
+    body{
+      margin:0;
+      padding:0;
+      box-sizing: border-box;
+      background-color:  rgba(0,0,0,0.90);
+      
+    }
+    
+    #app{
+      
+      position: relative;
+      height: auto;
+          
+      
+    }
+
+    header{
+      position: relative;
+      height: 20vh;
+      width: 100%;
+      box-shadow: 0 0.5rem 0.5rem black;
+      margin-bottom: 1rem;
+      
+      
+      
+      
+    }
+
+    .app__name {
+      font-family: 'Tangerine', serif;
+      color: white;
+      position: absolute;
+      font-size: 2.5rem;
+      top: -8%;
+      left: 3%;
+    }
+    .dotted__icon{
+      position: absolute;
+      top: 8%;
+      right: 3%;
+      cursor: pointer;
+
+    }
+    .dotted__icon__content{
+      position:absolute;
+      width: 12%;
+      height: 15vh;
+      background-color: #7bc8EE;
+      box-shadow: 0 0.5rem 0.5rem black;
+      top: 10%;
+      right: 5%;
+      padding-left: 1rem;
+      border-radius: 5%; 
+    }
+
+    .dot{
+      height: 0.25rem;
+      width: 0.25rem;
+      background-color: #7bc8EE;
+      margin: 0.3rem;
+    }
+    .dotted__content{
+      display: block;
+      padding: 0.50rem;
+      color: black;
+      cursor: pointer;
+    }
+
+    .section__link {
+      text-decoration: none;
+      color: white;
+      font-family: "tangerine", serif;
+      font-size: 1.7rem;
+      
+      
+    }
+    .colored-text{
+      color: #7bc8EE;
+    }
+    .colored-dot{
+      background-color: #7bc8EE;
+    }
+    .section__titles{
+      width: 100%;
+      height: auto;
+      position: absolute;
+      bottom: 2%;
+      text-align: center;
+    }
+    .section__titles h3{
+      display: inline;
+      margin: 0.5rem;
+
+    }
+    .plus{
+      position: absolute;
+      position: fixed;
+      bottom: 5%;
+      right: 2.5%;
+      color: white;
+      height: 2rem;
+      width: 1.8rem;
+      font-size: 2rem;
+      background-color: #7bc8EE;
+      text-align: center;
+      border-radius: 50%;
+      padding: 0.3rem;
+      box-shadow: 0 0.5rem 0.5rem black;
+      cursor: pointer;
+    }
+    .notes__section{
+      position: relative;
+      height: auto;
+      width: 100%;
+          
+
+    }
+    .notes-list{
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      padding: 0.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      
+      
+    }
+    .note{
+      height: auto;
+      width: 25%;
+      padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+      background-color: rgba(169,169,169, 0.15);
+      border-radius: 0.5rem;
+      box-shadow: 0 0.5rem 0.5rem black;
+      position: relative;
+      margin: 1rem;
+      color: white;
+      
+    }
+    .note-title{
+      margin-left: 10%;
+    }
+    .note-first__words{
+      color: rgba(255,255,255,0.5);
+
+    }
+    .fa-trash-o{
+      position: absolute;
+      bottom: 5%;
+      right: 10%;
+      cursor: pointer;
+
+
+    }
+    .fa-pencil{
+      position: absolute;
+      top: 5%;
+      right: 10%;
+      cursor: pointer;
+
+    }
+
+    .new__note{
+      position: relative;
+      position: fixed;
+      top: 0;
+      background-color: rgba(0,0,0,0.70);
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      
+    }
+    .new__note-head{
+      font-size: 2rem;
+    }
+    .new__note-form{
+      bottom: 1%;
+      height: 90%;
+      width: 90%;
+      background-color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-radius: 1rem;
+      font-family: "tangerine", serif;
+      
+    }
+    #new__note-title{
+      height: 2rem;
+      width: 100%;
+      margin-bottom: 2%;
+      border: none;
+  
+    }
+    
+    #new__note-title::placeholder{
+      font-style: italic;
+      text-align: center;
+    }
+    #new__note-content{
+      height: 70%;
+      width: 95%;
+      font: italic;
+    }
+    #new__note-content::placeholder{
+      font-style: italic;
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    #new__note-save__btn {
+      text-decoration: none;
+      border: thin solid #7bc8EE;
+      background-color: #7bc8EE;
+      color: black;
+      width: 25%;
+      padding: 0.2rem;
+      text-align: center;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 0.1rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+
+    }
+    #new__note-close{
+      font-size: 3rem;
+      transform: rotate(45deg);
+      color: black;
+      position: absolute;
+      top: 3%;
+      right: 8%;
+      cursor: pointer;
+      font-weight: bold;
+
+    }
+
+    .new__note-title__modal{
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.60);
+      position: absolute;
+      top: 0;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.5rem;
+      text-shadow: 0.5rem 0.5rem 0.5rem #000; 
+      
+      
+    }
+    .new__note-title__input{
+      width: 60%;
+      height: 7vh;
+      border-radius: -2%;
+      box-shadow: 0 0.5rem 0.5rem black;
+    }
+    .new__note-title__input::placeholder{
+      text-align: center;
+    }
+    #create__title-btn {
+      width: 20%;
+      background-color: #7bc8EE;
+      padding: 0.2rem;
+      margin-top: 3%;
+      cursor: pointer;
+
+    }
+    /* Vue animation classes for new Note */
+    .fade-enter{
+      opacity: 0;
+    }
+    .fade-enter-active{
+      transition: opacity 1s;
+    }
+    /*.fade-leave{
+
+    } */
+    .fade-leave-active{
+      transition: opacity 1s;
+      opacity: 0;
+    }
+
+    /* vuew animation classes for new totte title*/
+    .slide-enter{
+      opacity: 0;
+    }
+    .slide-enter-active{
+      transition: opacity 2s;
+    }
+    /*.fade2-leave{
+
+    } */
+    .slide-leave-active{
+      transition: opacity 1s;
+      opacity: 0;
+    }
+
+
+
+    @media screen and (max-width: 600px){
+
+      .notes__section{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; 
+        justify-content: center;
+        align-items: center;       
+      }
+
+      .note{
+        width: 80%;
+      }
+      .dotted__icon__content{
+        width: 20%;
+        padding-left: 0.5rem;
+      }
+      .dotted__icon__content{
+        right: 7%;
+      }
+      
+    }
+
+    @media screen and (min-width: 600px){
+
+      .notes__section{
+        display: flex;
+        justify-content: space-between; 
+        justify-content: center;
+        align-items: center;       
+      }
+
+      .note{
+        width: 40%;
+      }
+      .dotted__icon__content{
+        width: 17%;
+      }
+      .dotted__icon__content{
+        right: 7%;
+      }
+
+    }
+
+    @media screen and (min-width: 800px){
+
+      .notes__section{
+        display: flex;
+        justify-content: space-between; 
+        justify-content: center;
+        align-items: center;       
+      }
+
+      .note{
+        width: 25%;
+      }
+      .dotted__icon__content{
+        width: 12%;
+      }
+      .dotted__icon__content{
+        right: 6%;
+      }
+
+    }
+
+    
+    
+    
+
+
+
+  
+  </style>
+
+
+
+  <div id="app">
+    <header>
+      <h2 class="app__name">N<span class="colored-text">o</span>t<span class="colored-text">e</span>s</h2>
+      <div class="dotted__icon" @click="showDottedContent = !showDottedContent">
+        <div class="dot colored-dot"></div>
+        <div class="dot"></div>
+        <div class="dot colored-dot"></div>
+      </div>
+      <template>
+        <div class="dotted__icon__content" v-if="showDottedContent" @mouseout= "showDottedContent">
+          <i class="fa fa-plus dotted__content" @click="showNewNote = !showNewNote">New note</i>
+          <i class="fa fa-refresh dotted__content">Refresh</i>
+        </div>
+    </template>
+
+
+      <div class="section__titles">
+        <h3 class="my__notes"><a href="" class="section__link">My Notes</a></h3>
+        
+      </div>
+    </header>
+
+
+    <div class="notes__section notes">
+      
+      <div class="notes-list">
+        
+        <section class="note" v-for="note in notes" @click="currentNote = note">
+          <h3 class="note-title">Note1</h3>
+          <p class="note-first__words"> The man who is born again isn't born into isolation raher into a family,.......</p>
+          <i class="fa fa-trash-o"></i>
+          <i class="fa fa-pencil"></i>
+        </section>
+        
+      </div>  
+     
+
+    </div>
+
+    <div class="plus" @click="showNewNote = !showNewNote" @click="showNoteTitle = !showNoteTitle">+</div>
+    <template>
+      <transition name="fade">
+        <div class="new__note" v-if="showNewNote">
+          <form class="new__note-form">
+            <div id="new__note-close" @click="showNewNote = false">+</div>
+            <h2 class="new__note-head">  N<span class="colored-text">e</span>w N<span class="colored-text">o</span>t<span class="colored-text">e</span></h2>
+            <input type="text" placeholder="Note Title" id="new__note-title">
+            <textarea name="" id="new__note-content" cols="30" rows="10" placeholder="Write here"></textarea>
+            <a type="submit" href="" id="new__note-save__btn"> Create New Note</a>
+          
+          </form>
+          <!-- modal popUp for new__note title yet to be properly animated in Vue js-->
+          <transition name="slide">
+            <div class="new__note-title__modal" v-if="showNoteTitle">
+              <p>Enter Note title</p>
+              <input type="text" class="new__note-title__input" placeholder="your title will appear at the top of your note">
+              <button id="create__title-btn" @click="showNoteTitle">Done</button>
+            </div>
+        </transition>
+        <!--end of modal popUp for new__note title-->
+        </div>
+
+        
+      </transition>
+    </template>
+  </div>
+
+  
+  
+
+
+
+  <script>
+    new Vue({
+      el: "#app",
+      data(){
+        return{
+          showNewNote: false,
+          showDottedContent: false,
+          showNoteTitle: false,
+        }
+      }
+    })
+  
+  
+  
+  </script>
+  
+</body>
+</html>
