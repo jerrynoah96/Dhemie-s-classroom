@@ -34,10 +34,6 @@
       width: 100%;
       box-shadow: 0 0.5rem 0.5rem black;
       margin-bottom: 1rem;
-      
-      
-      
-      
     }
 
     .app__name {
@@ -62,11 +58,9 @@
       background-color: #7bc8EE;
       box-shadow: 0 0.5rem 0.5rem black;
       top: 10%;
-      right: 2.5%;
+      right: 5%;
       padding-left: 1rem;
-      border-radius: 5%;
-      
-      
+      border-radius: 5%; 
     }
 
     .dot{
@@ -177,7 +171,7 @@
 
     }
 
-    .new__note{
+    .modal__popup{
       position: relative;
       position: fixed;
       top: 0;
@@ -192,7 +186,7 @@
     .new__note-head{
       font-size: 2rem;
     }
-    .new__note-form{
+    .modal__white{
       bottom: 1%;
       height: 90%;
       width: 90%;
@@ -200,8 +194,9 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      border-radius: 1rem;
+      border-radius: 0.3rem;
       font-family: "tangerine", serif;
+      text-align: center;
       
     }
     #new__note-title{
@@ -220,6 +215,7 @@
       height: 70%;
       width: 95%;
       font: italic;
+      border: none;
     }
     #new__note-content::placeholder{
       font-style: italic;
@@ -242,7 +238,7 @@
       font-weight: bold;
 
     }
-    #new__note-close{
+    .close{
       font-size: 3rem;
       transform: rotate(45deg);
       color: black;
@@ -287,6 +283,13 @@
       cursor: pointer;
 
     }
+    #no__note{
+      color: white;
+      margin-top: 15%;
+      font-size: 1.7rem;
+      opacity: 0.6;
+    }
+    
     /* Vue animation classes for new Note */
     .fade-enter{
       opacity: 0;
@@ -331,10 +334,14 @@
 
       .note{
         width: 80%;
+        
       }
       .dotted__icon__content{
         width: 20%;
         padding-left: 0.5rem;
+      }
+      .dotted__icon__content{
+        right: 7%;
       }
       
     }
@@ -345,7 +352,8 @@
         display: flex;
         justify-content: space-between; 
         justify-content: center;
-        align-items: center;       
+        align-items: center;
+        flex-wrap: wrap;       
       }
 
       .note{
@@ -353,6 +361,9 @@
       }
       .dotted__icon__content{
         width: 17%;
+      }
+      .dotted__icon__content{
+        right: 7%;
       }
 
     }
@@ -363,7 +374,8 @@
         display: flex;
         justify-content: space-between; 
         justify-content: center;
-        align-items: center;       
+        align-items: center;
+        flex-wrap: wrap;       
       }
 
       .note{
@@ -371,6 +383,9 @@
       }
       .dotted__icon__content{
         width: 12%;
+      }
+      .dotted__icon__content{
+        right: 6%;
       }
 
     }
@@ -395,7 +410,7 @@
         <div class="dot colored-dot"></div>
       </div>
       <template>
-        <div class="dotted__icon__content" v-if="showDottedContent" @mouseout= "showDottedContent">
+        <div class="dotted__icon__content" v-if="showDottedContent">
           <i class="fa fa-plus dotted__content" @click="showNewNote = !showNewNote">New note</i>
           <i class="fa fa-refresh dotted__content">Refresh</i>
         </div>
@@ -410,31 +425,25 @@
 
 
     <div class="notes__section notes">
-      
-      <div class="notes-list">
-        
-        <section class="note" v-for="note in notes" @click="currentNote = note">
-          <h3 class="note-title">{{note.title}}</h3>
-          <p class="note-first__words"> </p>
-          <i class="fa fa-trash-o"></i>
-          <i class="fa fa-pencil" @click="showNoteContent=!showNoteContent"></i>
-        </section>
-        
-      </div>  
-     
-
+      <p v-if="!notes.length" id="no__note">Click the icon below to add notes</p>  
+      <section class="note" v-for="note in notes" @click="showNoteContent = true">
+        <h3 class="note-title">{{note.title}}</h3>
+        <p class="note-first__words"> </p>
+        <i class="fa fa-trash-o"></i>
+        <i class="fa fa-pencil" @click="currentNote = note"  ></i>
+      </section>
     </div>
 
-    <div class="plus" @click="showNewNote = !showNewNote">+</div>
+    <div class="plus" @click="showNewNote = !showNewNote" @click="showNoteTitle = !showNoteTitle">+</div>
     <template>
       <transition name="fade">
-        <div class="new__note" v-if="showNewNote">
-          <form class="new__note-form">
-            <div id="new__note-close" @click="showNewNote = false">+</div>
+        <div class="new__note modal__popup" v-if="showNewNote">
+          <form class="new__note-form modal__white">
+            <div id="new__note-close" class="close" @click="showNewNote = false">+</div>
             <h2 class="new__note-head">  N<span class="colored-text">e</span>w N<span class="colored-text">o</span>t<span class="colored-text">e</span></h2>
             <input type="text" placeholder="Note Title" id="new__note-title">
             <textarea name="" id="new__note-content" cols="30" rows="10" placeholder="Write here"></textarea>
-            <a type="submit" href="" id="new__note-save__btn"> Create New Note</a>
+            <button type="submit" id="new__note-save__btn" @click="createNote"> Create New Note</button>
           
           </form>
           <!-- modal popUp for new__note title yet to be properly animated in Vue js-->
@@ -446,27 +455,34 @@
             </div>
         </transition>
         <!--end of modal popUp for new__note title-->
-        </div>
-
-        
+        </div>        
       </transition>
     </template>
 
+    <template>
+      <transition name="fade">
+        <div class="note__content__modal modal__popup" v-if="showNoteContent">
+          <div class="note__content modal__white" v-for="note in notes" v-if="currentNote">
+            <div class="close" @click="showNoteContent = false">+</div>
+            
+            <input type="text" v-model="currentNote.title" class="note-title">
+            <textarea name="" id="" cols="30" rows="10" v-model="note.contents">
+              {{currentNote.contents}}
+            </textarea>
 
-    <!--<div class="new__note" v-if="showNoteContent">
-      <form class="new__note-form noteContent">
-        <div id="new__note-close" @click="showNoteContent = false">+</div>
-        <h2>{{currentNote.title}}</h2>
-        <p class="content">{{currentNote.contents}}</p>
-      </form>
-    </div> -->
+          </div>
+        </div>
+      </transition>
+    </template>
+
+  </div>
 
   
   
 
 
 
-  <script >
+  <script>
     new Vue({
       el: "#app",
       data(){
@@ -475,13 +491,21 @@
           showDottedContent: false,
           showNoteTitle: false,
           showNoteContent: false,
+          notes: [],
+          currentNote: null,
         }
       },
 
-      data: {
-        notes:[{title: "test", contents: "Whats your name oga"}],
-        currentNote: null
+      methods: {
+        createNote(){
+          const newNote = {title:'', contents:''};
+          this.notes.push(newNote);
+          this.currentNote = newNote;
+        }
       }
+         
+        
+      
     });
   
   
