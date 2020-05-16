@@ -223,7 +223,7 @@
       text-align: center;
     }
 
-    #new__note-save__btn {
+    .btn {
       text-decoration: none;
       border: thin solid #7bc8EE;
       background-color: #7bc8EE;
@@ -289,6 +289,45 @@
       font-size: 1.7rem;
       opacity: 0.6;
     }
+    .note__content{
+      text-align: center;
+    }
+    #note-content{
+      width: 90%;
+      height: 70%;
+    }
+    #note-content-title{
+      width: 70%;
+      height: 7%;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      border: none;
+      border-bottom: thin solid black;
+    }
+    .del__modal{
+      background-color: rgba(0,0,0, 0.50);
+      
+    }
+    .del{
+      background-color: white;
+      width: 60vw;
+      height: auto;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      text-align: center;
+    }
+    .cancelDelete{
+      width: 15%;
+      padding: 0.5rem;
+      background-color: #7Bc8EE;
+    }
+    .del-btn{
+      width: 15%;
+      padding: 0.5rem;
+      background-color: red;
+      color: white;
+      margin-right: 1rem;
+    }
     
     /* Vue animation classes for new Note */
     .fade-enter{
@@ -342,6 +381,12 @@
       }
       .dotted__icon__content{
         right: 7%;
+      }
+      .del-btn{
+      width: 25%;
+      }
+      .cancelDelete{
+        width:25%;
       }
       
     }
@@ -412,7 +457,7 @@
       <template>
         <div class="dotted__icon__content" v-if="showDottedContent">
           <i class="fa fa-plus dotted__content" @click="showNewNote = !showNewNote">New note</i>
-          <i class="fa fa-refresh dotted__content">Refresh</i>
+          <i class="fa fa-refresh dotted__content" v-for="note in notes" @click="refresh">Refresh</i>
         </div>
     </template>
 
@@ -423,15 +468,24 @@
       </div>
     </header>
 
-
+    <!--note list-->
     <div class="notes__section notes">
       <p v-if="!notes.length" id="no__note">Click the icon below to add notes</p>  
-      <section class="note" v-for="note in notes" @click="showNoteContent = true">
-        <h3 class="note-title">{{note.title}}</h3>
-        <p class="note-first__words"> </p>
-        <i class="fa fa-trash-o"></i>
-        <i class="fa fa-pencil" @click="currentNote = note"  ></i>
+      <section class="note" v-for="(note, index) in notes" >
+        <h3 class="note-title" @click="showNoteContent = true">{{note.title}}</h3>
+        <p class="note-first__words"> {{note.content.slice(0, 70)}}.... </p>
+        <i class="fa fa-trash-o"  @click = "delModal= true" ></i>
+        <i class="fa fa-pencil" @click="showNoteContent = true" ></i>
       </section>
+    </div>
+
+    <div class="del__modal modal__popup" v-if = "delModal" >
+      <div class="del delANote"  >
+        <p>Are you sure you want to delete</p>
+        <p>"{{note.title}}"</p>
+        <button class="delete del-btn"   @click="remove(index)" v-for="(note, index) in notes">Delete</button>
+        <button class="cancelDelete" @click="delModal = false">Cancel</button>
+      </div>
     </div>
 
     <div class="plus" @click="showNewNote = !showNewNote" @click="showNoteTitle = !showNoteTitle">+</div>
@@ -441,9 +495,9 @@
           <form class="new__note-form modal__white">
             <div id="new__note-close" class="close" @click="showNewNote = false">+</div>
             <h2 class="new__note-head">  N<span class="colored-text">e</span>w N<span class="colored-text">o</span>t<span class="colored-text">e</span></h2>
-            <input type="text" placeholder="Note Title" id="new__note-title">
-            <textarea name="" id="new__note-content" cols="30" rows="10" placeholder="Write here"></textarea>
-            <button type="submit" id="new__note-save__btn" @click="createNote"> Create New Note</button>
+            <input type="text" placeholder="Note Title" id="new__note-title" v-model="note.title">
+            <textarea name="" id="new__note-content" cols="30" rows="10" placeholder="Write here" v-model="note.content"></textarea>
+            <button type="submit" class="btn" id="new__note-save__btn" @click.prevent="createNote"> Create New Note</button>
           
           </form>
           <!-- modal popUp for new__note title yet to be properly animated in Vue js-->
@@ -465,10 +519,12 @@
           <div class="note__content modal__white" v-for="note in notes" v-if="currentNote">
             <div class="close" @click="showNoteContent = false">+</div>
             
-            <input type="text" v-model="currentNote.title" class="note-title">
-            <textarea name="" id="" cols="30" rows="10" v-model="note.contents">
-              {{currentNote.contents}}
+            <textarea type="text" v-model="currentNote.title" id= "note-content-title" class="note-title">{{note.title}}</textarea>
+            <textarea name="" id="note-content" cols="30" rows="10" >
+              {{note.content}}
             </textarea>
+
+            <button id="update-note" class="btn">Update</button>
 
           </div>
         </div>
@@ -491,17 +547,38 @@
           showDottedContent: false,
           showNoteTitle: false,
           showNoteContent: false,
+          delModal: false,
           notes: [],
           currentNote: null,
+          note: {title: " ", content: " "},
         }
       },
 
       methods: {
         createNote(){
-          const newNote = {title:'', contents:''};
-          this.notes.push(newNote);
-          this.currentNote = newNote;
+
+          if(this.note.title != " "){
+            this.notes.unshift(this.note);
+            this.currentNote = this.note;
+
+          }
+          else{
+            alert("you need a title");
+          }
+          
+          
+          
+        },
+        remove(index){
+          
+          //this.notes.splice(index, 1);
+          this.$delete(this.notes, index);
+
+        },
+        refresh(){
+          this.$delete(this.notes);
         }
+        
       }
          
         
